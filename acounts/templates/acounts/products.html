@@ -12,7 +12,15 @@
           <th>Product-Name</th>
           <th>Catagory</th>
           <th>Price</th>
+          <th>Quantity</th>
         </tr>
+        {%for product in products%}
+          <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.category}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.quantity}}</td>
+        {%endfor%}
       </table>
     </div>
   </div>
