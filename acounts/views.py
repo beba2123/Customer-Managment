@@ -6,15 +6,18 @@ from .models import *
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
-    totalOrders = orders.count()
+    total_orders = orders.count()
     order_delieverd = orders.filter(status = 'Delivered').count()
-    order_pending = orders.filter(status = 'Pending')
-    context = {'orders': orders, 'customers': customers,'order-delivered': order_delieverd, 'order-pending': order_pending, ' totalOrders': totalOrders}
+    order_pending = orders.filter(status = 'Pending').count()
+    context = {'orders': orders, 'customers': customers,'order_delivered': order_delieverd, 'order_pending': order_pending, 'total_orders': total_orders}
     return render(request, 'acounts/dashboard.html', context)
 
 def products(request):
     products = Product.objects.all()
     return  render(request,'acounts/products.html', {'products': products})
 
-def customer(request):
-    return render(request, 'acounts/customer.html')
+def customer(request, pk):
+    customer = Customer.objects.get(id=pk)
+    orders = customer.order_set.all()
+    context = {'customer': customer, 'orders': orders}
+    return render(request, 'acounts/customer.html', context)
