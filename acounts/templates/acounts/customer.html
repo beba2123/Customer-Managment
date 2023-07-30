@@ -8,7 +8,7 @@
       <a class="btn btn-outline-info btn-sm btn-block" href=""
         >Update-Customer</a
       >
-      <a class="btn btn-outline-info btn-sm btn-block" href=""
+      <a class="btn btn-outline-danger btn-sm btn-block" href=""
         >Delete-Customer</a
       >
     </div>
@@ -63,8 +63,8 @@
           <td>{{order.product.category}}</td>
           <td>{{order.date_created}}</td>
           <td>{{order.status}}</td>
-          <td><a href="">Updates</a></td>
-          <td><a href="">Delete</a></td>
+          <td><a class="btn btn-sm btn-info" href="">Updates</a></td>
+          <td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
         </tr>
         {%endfor%}
       </table>
