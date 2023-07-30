@@ -45,4 +45,12 @@ print(ballOrders) --> 2
      class OrderForm(ModelForm):
           class Meta:
                model = Order
-               fields = ['__all__']
+               fields = ['__all__']  this holds all the table inside the order class.
+-> then we have to come back to views.py and import OrderForm from form.py file and then 
+     def createOrder(request):
+          form = OrderForm(): first we store a order form inside the form
+               if request.method == 'POST': then check it if it is post method
+                    form = OrderForm(request.POST)    contains all the submitted form. (request.post method is like  dictionary form that store all sumbitted information inside the form)
+                    if form.is_valid(): //then check it if it valid 
+                         form.save() // save it 
+                         return redirect('home')  //lastly redirect it to home page.
