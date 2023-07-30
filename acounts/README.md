@@ -39,4 +39,10 @@ print(ballOrders) --> 2
 -->> in template tags we use two thing {{}} used for passing data for the temlate and {% %} used for writing url or writing loop function inside it.
 
 
-#  
+# Form in django
+
+-> first we have to import modelform from django.forms then import one of  the model that you want to fill out like Order or Customer..or something else.
+     class OrderForm(ModelForm):
+          class Meta:
+               model = Order
+               fields = ['__all__']
