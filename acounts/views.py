@@ -52,5 +52,10 @@ def update_order(request, pk):
 
 
 def delete_order(request, pk):
-    context={}
+    order = Order.objects.get(id=pk)
+    if request.method == 'POST': #if we say confirm
+        order.delete() #the order is going to be deleted 
+        return redirect('/') # then we will be redirect to the home page 
+    context={'item':order}
+
     return render(request, 'acounts/delete_order.html', context)
