@@ -36,3 +36,16 @@ def create_order(request):
 
     context={'form':form}
     return render(request, 'acounts/create_form.html', context)
+
+def update_order(request, pk):
+    
+    order = Order.objects.get(id=pk)
+    form = OrderForm(instance=order) #the instance of the order table before we update it the previous information that we submited it.
+    
+    if request.method == 'POST':
+     form = OrderForm(request.POST, instance=order)
+     if form.is_valid():
+        form.save()
+        return redirect('/')
+    context = {'form': form}
+    return render(request, 'acounts/create_form.html', context)
