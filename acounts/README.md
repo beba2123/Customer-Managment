@@ -39,8 +39,10 @@ print(ballOrders) --> 2
 -->> in template tags we use two thing {{}} used for passing data for the temlate and {% %} used for writing url or writing loop function inside it.
 
 
-# Form in django
+# Form in django and Crud application
 
+
+# 1 create order
 -> first we have to import modelform from django.forms then import one of  the model that you want to fill out like Order or Customer..or something else.
      class OrderForm(ModelForm):
           class Meta:
@@ -54,4 +56,28 @@ print(ballOrders) --> 2
                     if form.is_valid(): //then check it if it valid 
                          form.save() // save it 
                          return redirect('home')  //lastly redirect it to home page.
+     
+#  2 update order
+     def update_order(request, pk): -> first create a function that is used for update an order.
+          order = Order.objects.get(id=pk) #-> then find one of the row inside a table using it id
+          form = OrderForm(instance=order) #the instance of the order table before we update it the previous information that we submited it.
+          
+          if request.method == 'POST':
+               form = OrderForm(request.POST, instance=order)
+               if form.is_valid():
+               form.save()
+               return redirect('/')
+          context = {'form': form}
+          return render(request, 'acounts/create_form.html', context)
 
+# delete order
+          
+          def delete_order(request, pk):
+               order = Order.objects.get(id=pk) #-> find the table based on its id
+               if request.method == 'POST': #if we say confirm
+                    order.delete() #the order is going to be deleted 
+                    return redirect('/') # then we will be redirect to the home page 
+               context={'item':order}
+
+               return render(request, 'acounts/delete_order.html', context)
+                    
