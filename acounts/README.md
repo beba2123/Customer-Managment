@@ -80,4 +80,26 @@ print(ballOrders) --> 2
                context={'item':order}
 
                return render(request, 'acounts/delete_order.html', context)
+
+# Filter in django
+
+-> first install filter using pip install django-filter
+-> then we create a file called  filters.py inside our app folder
+     1st we have to import django_filter and import the models
+     class OrdersFilter(django_filters.FilterSet):
+          class Meta:
+               model = Order -> write filter class 
+               fields = '__all__' -> all the rows inside the orders table.
+-> there are other things that we can do inside our filter file like excluding one of the row and we can import diffrent package from the django filter like 
+     DateFilter, CharFilter
+               Eg start_date = DateFilter(field_name='date_created', lookup_expr='gte')
+
+               end_date = DateFilter(field_name='date_created', lookup_expr='lte')
+               note = CharFilter(field_name='note', lookup_expr='icontains')
+               
+-> then we goes to our view file and lets say that we are going to filter on a customer page so we goes to customer  function
+     -> from .filters import OrdersFilter ->import the class from filter
+     myfilter = OrderFilter(request.GET, queryset='the model that we want')
+
+
                     
