@@ -101,6 +101,25 @@ print(ballOrders) --> 2
      -> from .filters import OrdersFilter ->import the class from filter
      myfilter = OrderFilter(request.GET, queryset='the model that we want')
 
+# create registration and login page 
 
-                    
+-> we can use diffrent method to create a login and registration page so in these project i used UserCreationForm that is imported from django so this form has username, email ,password and other form which is default form in django.
+
+-> so first i create forms.py file then import user creation form then create a class and make a form page using it.
+->   class CreateUserForm(UserCreationForm): 
+               class Meta:
+                    model = User
+                    fields = ['username', 'email', 'password1', 'password2']
+
+-> then import the CreateUserForm to a views.py then under registerpage function
+
+def registerpage(request):
+     form = CreateUserForm()
+     
+     request.method == POST:
+          form = CreateUserForm(request.POST)
+          if form.is_valid():
+               form.save()
+               return redirect('/')
+               
 
