@@ -6,6 +6,7 @@ from .forms import OrderForm, CreateUserForm
 from .filters  import OrderFilter
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 
@@ -19,13 +20,28 @@ def registerPage(request):
             user=form.cleaned_data['username']
             messages.success(request, user + ' created account successfully ')
             return  redirect('login')
+        else:
+            form = CreateUserForm() #the request is not POST method the user is presented with blank
 
     context = {'form': form}
     return render(request, 'acounts/register.html', context)
 
 def loginPage(request):
+
+    if request.method == 'POST':
+        username= request.POST['username']
+        password = request.POST['password']
+        user  = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'You successful logged in')
+            return redirect('home')
+        else:
+            messages.error(request,'Invalid Credentials!')
     context={}
     return render(request, 'acounts/login.html', context)
+
 
 def home(request):
     orders = Order.objects.all()
@@ -89,3 +105,93 @@ def delete_order(request, pk):
     context={'item':order}
 
     return render(request, 'acounts/delete_order.html', context)
+
+
+
+
+
+# from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib import messages
+# from .models import *
+# from classes.models import *
+# from teachers.models import *
+# from accounts.decorators import student_required
+# # Create your views here.
+# @student_required
+# def student_dashboard(request, pk):
+#     user = request.user     #to retriev the data based on the logged in user
+#     students = Student.objects.filter(user=user) #filtering students based on the it's user
+
+#     if students.exists():
+#         student = students.first() #if it exists take the first one from the queryset
+#         courses = Subject.objects.all().order_by('-id')  #retrieving all subjects and ordering them by id descending
+#         stu_class = Class_room.objects.get(id=pk)
+    
+#         context={
+#         'student':student,
+#         "classes":stu_class,
+#         "courses": courses
+#         }
+
+#         # get class schedule for each class
+#         class_schedule = {}
+#         for class_obj in stu_class: ##iterate for each classes
+#             schedule = classSchedule.objects.filter(class_info= class_obj) #classSchedule is not in the model..
+#             class_schedule[class_obj] = schedule
+
+#         context['class_schedules'] = class_schedule #adding class schedule to the context becouse it is dictionary we cannot write it in dictionar we just store it directly.
+#         return render (request,'students/student-dashbord.html',context )
+#     else:
+#         messages.error("You are not a registered student")
+#         return redirect('home')
+    
+
+# @student_required
+# def view_grades(request):
+#     try:
+#         students = Student.objects.get(Student, user=request.user) #like assuming that the user model is associated  with the student 
+#     except Student.DoesNotExist:
+#         return render(request, 'dashboard/student_not_found.html')
+    
+#     grades = Grade.objects.filter(students=students)  #add Grade class it is not added.
+
+#     # i want to add this one but there is no table related to it
+#     test_results = TestResult.objects.filter(students=students)
+#     assignment_results = AssignmentResult.objects.filter(students=students)
+#     final_test_results = FinalTestResult.objects.filter(students=students)
+
+#     context = {
+#         'test_results': test_results,
+#         'assignment_results': assignment_results,
+#         'final_test_results': final_test_results,
+#         'grades' : grades,
+#         'students':students
+#     }
+#     return render(request,"students/view_grades.html",context)
+
+
+# def view_attendance(request):
+#     student = Student.objects.get(user = request.user)
+#     Attendance_record = Attendance.objects.filter(student=student)
+
+#     context = {'student': student,
+#                 'attendance_record': Attendance_record
+#             }
+#     return render(request,  'dashboard/view_attendance.html', context)
+
+# def view_resources(request):
+#     student = get_object_or_404(Student, user=request.user)
+#     enrolled_classes = student.class_room_id.all()
+
+#     teacher_resource_mapping  = {}
+
+#     for enrolled_class in enrolled_classes:
+#         teacher = enrolled_class.teacher
+#         resources = Resource.objects.filter(uploaded_by = teacher)
+#         teacher_resource_mapping[teacher] = resources
+#         context={
+#             "enrolled": True if (enrolled_class == Class_room.objects.get(pk=1)) else False ,
+#             "teacher" : teacher,
+#             "resources" : resources
+#             }
+#         return render(request,'dashboard/view_resources.html',context )

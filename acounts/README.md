@@ -114,12 +114,35 @@ print(ballOrders) --> 2
 -> then import the CreateUserForm to a views.py then under registerpage function
 
 def registerpage(request):
-     form = CreateUserForm()
+     form = CreateUserForm() ==> storing inside the form
      
      request.method == POST:
           form = CreateUserForm(request.POST)
           if form.is_valid():
                form.save()
+               user = form.cleaned_data['username'] -> accessing user data clean data from the validated submit form.
+               messages.successs(request, user + ' created account successfully ')
                return redirect('/')
+
+
+# login page
+-> first import the authentication and login page from django.contrib.auth 
+def loginPage(request):
+
+     if request.method == 'POST':
+          username= request.POST['username'] #got the submitted username
+          password = <PASSWORD>.POST['<PASSWORD>'] # got the submitted password
+          user = authenticate(request, username=username, password=<PASSWORD>) # authenticate it
+          if user is not None :    if the authenticate user is right 
+               login(request, user)     # login the user
+               messages.success(request,'You are logged in succefully!') # give succesfull message
+               return redirect('home/')
+          else:
+               message.error(request, 'invalid credential..!!')
+     
+     return render(request , 'login/login.html' )
+
+
                
 
+ 
