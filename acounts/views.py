@@ -7,6 +7,7 @@ from .filters  import OrderFilter
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -45,7 +46,7 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
-
+@login_required(login_url='login')
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
@@ -55,10 +56,11 @@ def home(request):
     context = {'orders': orders, 'customers': customers,'order_delivered': order_delieverd, 'order_pending': order_pending, 'total_orders': total_orders}
     return render(request, 'acounts/dashboard.html', context)
 
+@login_required(login_url='login')
 def products(request):
     products = Product.objects.all()
     return  render(request,'acounts/products.html', {'products': products})
-
+@login_required(login_url='login')
 def customer(request, pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
@@ -69,6 +71,7 @@ def customer(request, pk):
     context = {'customer': customer, 'orders': orders, 'orders_count':orders_count, 'myfilter':myfilter}
     return render(request, 'acounts/customer.html', context)
 
+@login_required(login_url='login')
 def create_order(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=("product", "status"), extra=5)
     customer = Customer.objects.get(id=pk)
@@ -86,6 +89,7 @@ def create_order(request, pk):
     context={'formset':formset}
     return render(request, 'acounts/create_form.html', context)
 
+@login_required(login_url='login')
 def update_order(request, pk):
     
     order = Order.objects.get(id=pk)
@@ -99,7 +103,7 @@ def update_order(request, pk):
     context = {'form': form}
     return render(request, 'acounts/create_form.html', context)
 
-
+@login_required(login_url='login')
 def delete_order(request, pk):
     order = Order.objects.get(id=pk)
     if request.method == 'POST': #if we say confirm
