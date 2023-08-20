@@ -12,36 +12,41 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def registerPage(request):
-    form = CreateUserForm()
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        form = CreateUserForm()
 
-    if request.method == 'POST':
-        form  = CreateUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            user=form.cleaned_data['username']
-            messages.success(request, user + ' created account successfully ')
-            return  redirect('login')
-        else:
-            form = CreateUserForm() #the request is not POST method the user is presented with blank
+        if request.method == 'POST':
+            form  = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user=form.cleaned_data['username']
+                messages.success(request, user + ' created account successfully ')
+                return  redirect('login')
+            else:
+                form = CreateUserForm() #the request is not POST method the user is presented with blank
 
-    context = {'form': form}
-    return render(request, 'acounts/register.html', context)
+        context = {'form': form}
+        return render(request, 'acounts/register.html', context)
 
 def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        if request.method == 'POST':
+            username= request.POST['username']
+            password = request.POST['password']
+            user  = authenticate(request, username=username, password=password)
 
-    if request.method == 'POST':
-        username= request.POST['username']
-        password = request.POST['password']
-        user  = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'You successful logged in')
-            return redirect('home')
-        else:
-            messages.error(request,'Invalid Credentials!')
-    context={}
-    return render(request, 'acounts/login.html', context)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'You successful logged in')
+                return redirect('home')
+            else:
+                messages.error(request,'Invalid Credentials!')
+        context={}
+        return render(request, 'acounts/login.html', context)
 
 def logoutUser(request):
     logout(request)
