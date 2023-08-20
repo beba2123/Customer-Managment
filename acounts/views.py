@@ -30,6 +30,7 @@ def registerPage(request):
         context = {'form': form}
         return render(request, 'acounts/register.html', context)
 
+
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -47,11 +48,14 @@ def loginPage(request):
                 messages.error(request,'Invalid Credentials!')
         context={}
         return render(request, 'acounts/login.html', context)
+    
 
 def logoutUser(request):
     logout(request)
     return redirect('login')
 @login_required(login_url='login')
+
+
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
@@ -60,6 +64,11 @@ def home(request):
     order_pending = orders.filter(status = 'Pending').count()
     context = {'orders': orders, 'customers': customers,'order_delivered': order_delieverd, 'order_pending': order_pending, 'total_orders': total_orders}
     return render(request, 'acounts/dashboard.html', context)
+
+
+def user_page(request):
+    context = {}
+    return render (request , "acounts/user_profile.html" )
 
 @login_required(login_url='login')
 def products(request):
