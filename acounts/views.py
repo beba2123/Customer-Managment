@@ -6,7 +6,7 @@ from .forms import OrderForm, CreateUserForm
 from .filters  import OrderFilter
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 
@@ -42,6 +42,9 @@ def loginPage(request):
     context={}
     return render(request, 'acounts/login.html', context)
 
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 
 def home(request):
     orders = Order.objects.all()
