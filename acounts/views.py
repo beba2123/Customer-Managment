@@ -8,13 +8,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .decorators import *
 
 # Create your views here.
-
+@unauthenticated
 def registerPage(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
+    
         form = CreateUserForm()
 
         if request.method == 'POST':
@@ -30,11 +29,9 @@ def registerPage(request):
         context = {'form': form}
         return render(request, 'acounts/register.html', context)
 
-
+@unauthenticated
 def loginPage(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
+   
         if request.method == 'POST':
             username= request.POST['username']
             password = request.POST['password']
@@ -53,9 +50,9 @@ def loginPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
 @login_required(login_url='login')
-
-
+@allowed_user(allowed_roles=['admin'])
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
@@ -71,10 +68,13 @@ def user_page(request):
     return render (request , "acounts/user_profile.html" )
 
 @login_required(login_url='login')
+@allowed_user(allowed_roles=['admin'])
 def products(request):
     products = Product.objects.all()
     return  render(request,'acounts/products.html', {'products': products})
+
 @login_required(login_url='login')
+@allowed_user(allowed_roles=['admin'])
 def customer(request, pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all()
@@ -86,6 +86,7 @@ def customer(request, pk):
     return render(request, 'acounts/customer.html', context)
 
 @login_required(login_url='login')
+@allowed_user(allowed_roles=['admin'])
 def create_order(request, pk):
     OrderFormSet = inlineformset_factory(Customer, Order, fields=("product", "status"), extra=5)
     customer = Customer.objects.get(id=pk)
@@ -104,6 +105,7 @@ def create_order(request, pk):
     return render(request, 'acounts/create_form.html', context)
 
 @login_required(login_url='login')
+@allowed_user(allowed_roles=['admin'])
 def update_order(request, pk):
     
     order = Order.objects.get(id=pk)
@@ -118,6 +120,7 @@ def update_order(request, pk):
     return render(request, 'acounts/create_form.html', context)
 
 @login_required(login_url='login')
+@allowed_user(allowed_roles=['admin'])
 def delete_order(request, pk):
     order = Order.objects.get(id=pk)
     if request.method == 'POST': #if we say confirm
@@ -202,7 +205,7 @@ def delete_order(request, pk):
 
 # def view_resources(request):
 #     student = get_object_or_404(Student, user=request.user)
-#     enrolled_classes = student.class_room_id.all()
+#     enrolled_classes = student.class_room_pyhid.all()
 
 #     teacher_resource_mapping  = {}
 
