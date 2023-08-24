@@ -8,43 +8,45 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .decorators import *
+from .decorators import unauthenticated, allowed_user, admins_only
+from django.contrib.auth.models import Group
 
-# Create your views here.
 @unauthenticated
 def registerPage(request):
-    
-        form = CreateUserForm()
+   
+    form = CreateUserForm()
 
-        if request.method == 'POST':
-            form  = CreateUserForm(request.POST)
-            if form.is_valid():
-                form.save()
-                user=form.cleaned_data['username']
-                messages.success(request, user + ' created account successfully ')
-                return  redirect('login')
-            else:
-                form = CreateUserForm() #the request is not POST method the user is presented with blank
+    if request.method == 'POST':
+        form  = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username=form.cleaned_data.get('username')
+                
+            group = Group.objects.get(name='customer')
+            user.groups.add(group)  ##for adding the if the user register as a customer to add ther
+            #the user as a customer in the admin page..
 
-        context = {'form': form}
-        return render(request, 'acounts/register.html', context)
+            messages.success(request, username + ' created account successfully ')
+            return  redirect('login')
+    context = {'form': form}
+    return render(request, 'acounts/register.html', context)
 
 @unauthenticated
 def loginPage(request):
-   
-        if request.method == 'POST':
-            username= request.POST['username']
-            password = request.POST['password']
-            user  = authenticate(request, username=username, password=password)
 
-            if user is not None:
-                login(request, user)
-                messages.success(request, 'You successful logged in')
-                return redirect('home')
-            else:
-                messages.error(request,'Invalid Credentials!')
-        context={}
-        return render(request, 'acounts/login.html', context)
+    if request.method == 'POST':
+        username= request.POST.get('username')
+        password = request.POST.get('password')
+        user  = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'successfully logged in!!')
+            return redirect('home')
+        else:
+            messages.error(request,'Invalid Credentials!')
+    context={}
+    return render(request, 'acounts/login.html', context)
     
 
 def logoutUser(request):
