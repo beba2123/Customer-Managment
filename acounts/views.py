@@ -25,6 +25,7 @@ def registerPage(request):
             group = Group.objects.get(name='customer')
             user.groups.add(group)  ##for adding the if the user register as a customer to add ther
             #the user as a customer in the admin page..
+            Customer.objects.create(user=user) # the register user is immidietly register as a customer..
 
             messages.success(request, username + ' created account successfully ')
             return  redirect('login')
@@ -69,8 +70,13 @@ def home(request):
 @allowed_user(allowed_roles=['customer'])
 def user_page(request):
     orders = request.user.customer.order_set.all() # so this is for quering the the request user orders from the table
+    total_orders = orders.count() #
+    order_delieverd = orders.filter(status = 'Delivered').count()
+    order_pending = orders.filter(status = 'Pending').count()
+   
     print('ORDERS', orders)
-    context = {'orders': orders}
+    context = {'orders': orders, 'total_orders': total_orders,
+                'order_delivered': order_delieverd, 'order_pending': order_pending}
     return render (request , "acounts/user_profile.html", context )
 
 @login_required(login_url='login')
