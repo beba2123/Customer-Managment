@@ -65,9 +65,13 @@ def home(request):
     return render(request, 'acounts/dashboard.html', context)
 
 
+@login_required(login_url='login')
+@allowed_user(allowed_roles=['customer'])
 def user_page(request):
-    context = {}
-    return render (request , "acounts/user_profile.html" )
+    orders = request.user.customer.order_set.all() # so this is for quering the the request user orders from the table
+    print('ORDERS', orders)
+    context = {'orders': orders}
+    return render (request , "acounts/user_profile.html", context )
 
 @login_required(login_url='login')
 @allowed_user(allowed_roles=['admin'])
