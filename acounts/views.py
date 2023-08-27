@@ -143,6 +143,13 @@ def delete_order(request, pk):
     return render(request, 'acounts/delete_order.html', context)
 
 
+@login_required(login_url='login')
+@allowed_user(allowed_roles=['customer'])
+def accountSettings(request):
+    context={}
+    return render(request, 'acounts/acounts_settings.html', context)
+
+
 
 
 
