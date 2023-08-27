@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 # Create your models here.
 class Customer(models.Model):
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE) #establish the connection between the customer and login user.
     name = models.CharField(max_length=200, blank=True, null=True)
     phone_number = PhoneNumberField(null=False, blank=False, unique=True)
     Email = models.EmailField(max_length=200)

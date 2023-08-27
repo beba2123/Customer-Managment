@@ -143,6 +143,12 @@ def loginPage(request):
      return render(request , 'login/login.html' )
 
 
-               
+# create one to one relationship with the built in user model..
 
- 
+-> first in our model file we import the user model from django.contrib.auth import User the in one of our class we related the User with one to one relation with it.
+
+     user = model.OneToOneField(User, delete=models.CASCADE, null=TRUE)  # using this method..
+
+=> then after in the views.py file we are  going to write when user is register
+-> it is going to create in the customer class.
+     Customer.objects.create(user=user)
