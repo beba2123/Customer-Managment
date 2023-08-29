@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
 from .models import *
-from .forms import OrderForm, CreateUserForm
+from .forms import OrderForm, CreateUserForm, CustomerForm
 from .filters  import OrderFilter
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -146,7 +146,9 @@ def delete_order(request, pk):
 @login_required(login_url='login')
 @allowed_user(allowed_roles=['customer'])
 def accountSettings(request):
-    context={}
+    customer =  request.user.customer
+    form = CustomerForm(instance=customer)
+    context={'form': form}
     return render(request, 'acounts/acounts_settings.html', context)
 
 
