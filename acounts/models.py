@@ -6,9 +6,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Customer(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE) #establish the connection between the customer and login user.
     name = models.CharField(max_length=200, blank=True, null=True)
-    phone_number = PhoneNumberField(null=False, blank=False, unique=True)
     Email = models.EmailField(max_length=200)
-    profile_pic = models.ImageField(default="profile1.png", null=True, blank=True)
+    profile_pic = models.ImageField(default="profile-icon-png-898.png", null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.name 
