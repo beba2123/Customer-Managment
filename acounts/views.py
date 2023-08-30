@@ -22,10 +22,10 @@ def registerPage(request):
             user = form.save()
             username=form.cleaned_data.get('username')
                 
-            group = Group.objects.get(name='customer')
-            user.groups.add(group)  ##for adding the if the user register as a customer to add ther
-            #the user as a customer in the admin page..
-            Customer.objects.create(user=user) # the register user is immidietly register as a customer..
+            # group = Group.objects.get(name='customer')
+            # user.groups.add(group)  ##for adding the if the user register as a customer to add ther
+            # #the user as a customer in the admin page..
+            # Customer.objects.create(user=user, name=user.username) # the register user is immidietly register as a customer..
 
             messages.success(request, username + ' created account successfully ')
             return  redirect('login')

@@ -152,3 +152,8 @@ def loginPage(request):
 => then after in the views.py file we are  going to write when user is register
 -> it is going to create in the customer class.
      Customer.objects.create(user=user)
+
+
+# Signaling
+
+=> it is a mechanism for allowing certain senders to notify a set of recievers that some of the action has taken place.they are used to decoupled applications to get notified when certain actions occur elsewhere in the application.
