@@ -157,3 +157,13 @@ def loginPage(request):
 # Signaling
 
 => it is a mechanism for allowing certain senders to notify a set of recievers that some of the action has taken place.they are used to decoupled applications to get notified when certain actions occur elsewhere in the application.
+
+signals are used for sending notifications or events to other apps.
+=> so here is the first step that i  used in my project 
+1st i just import pre_save from django.db.models.signals
+then in this project i used the  signal for notify when a new customeer is registered in the website
+ 
+
+
+
+  
